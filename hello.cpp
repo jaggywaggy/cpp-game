@@ -6,10 +6,10 @@
  */
 class Student {
 
-  int m_age = 18;
-  int m_avg = 100;
-  std::string m_firstName = "First Name";
-  std::string m_lastName = "Last Name";
+  int _age = 18;
+  int _avg = 100;
+  std::string _firstName = "First Name";
+  std::string _lastName = "Last Name";
 
 public:
 
@@ -17,31 +17,31 @@ public:
   Student() { }
 
   Student(int age, int avg, std::string firstName, std::string lastName)
-    : m_age(age)
-    , m_avg(avg)
-    , m_firstName(firstName)
-    , m_lastName(lastName)
+    : _age(age)
+    , _avg(avg)
+    , _firstName(firstName)
+    , _lastName(lastName)
     {
     }
 
   int getAge() const {
-    return m_age;
+    return _age;
   }
 
   int getAvg() const {
-    return m_avg;
+    return _avg;
   }
 
   std::string getFirstName() const {
-    return m_firstName;
+    return _firstName;
   }
 
   std::string getLastName() const {
-    return m_lastName;
+    return _lastName;
   }
 
   void print() const {
-    std::cout << m_age  << " " << m_avg << " " << m_firstName << " " << m_lastName << std::endl;
+    std::cout << _age  << " " << _avg << " " << _firstName << " " << _lastName << std::endl;
   }
 
 };
@@ -68,6 +68,19 @@ public:
 
   const std::vector<Student>& getStudents() const {
     return _students;
+  }
+
+  void loadFromFile(const std::string& fileName) {
+    std::ifstream fin(fileName);
+    std::string firstName, lastName;
+    int age;
+    int avg;
+
+    // While we have first names.
+    while (fin >> firstName) {
+      fin >> lastName >> id >> avg;
+      addStudent(Student(age, avg, firstName, lastName));
+    }
   }
 
   void print() {
