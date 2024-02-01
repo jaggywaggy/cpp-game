@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 /**
  * Student class
@@ -16,7 +17,7 @@ public:
   // Default constructor.
   Student() { }
 
-  Student(int age, int avg, std::string firstName, std::string lastName)
+  Student(int age, int avg, const std::string& firstName, const std::string& lastName)
     : _age(age)
     , _avg(avg)
     , _firstName(firstName)
@@ -77,8 +78,9 @@ public:
     int avg;
 
     // While we have first names.
+    // (while we have input, assign token to firstName, and so on)
     while (fin >> firstName) {
-      fin >> lastName >> id >> avg;
+      fin >> lastName >> age >> avg;
       addStudent(Student(age, avg, firstName, lastName));
     }
   }
@@ -103,6 +105,10 @@ int main() {
   c1.addStudent(Student(30, 50, "Bob", "Smith"));
 
   c1.print();
+
+  Course c2("Test Read From File");
+  c2.loadFromFile("/Users/jaggy/Documents/students.txt");
+  c2.print();
 
   return 0;
 }
