@@ -13,7 +13,7 @@ int main() {
 	int a = 10;
 	int b = 12;
   // Assign a pointer to an integer.
-  // point to integer points to the address of a/b.
+  // int pointer to the address of a/b.
 	int* pa = &a; 
 	int* pb = &b;
 
