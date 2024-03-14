@@ -1,48 +1,82 @@
-/**
- * Calculate pounds of a circle. sf::CircleShape
- * x,y          x+2r,y
- * x,y+2r       x+2r,y+2r
- *
- * A rectangle would be essentially the same. sf::RectangleShape?
- *
- * circle.setFillColor(sf::Color(r, g, b))
- *
- * Rect N X Y SX SY R G B W H
- * Circ N X Y SX SY R G B Radius
- */
+// TODO: Figure out a way to utalise our shape specifications.
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window.hpp>
-// #include <fstream>
+#include <fstream>
 #include <iostream>
-#include <memory>
 
 class RenderShape {
-  std::vector<std::shared_ptr<sf::Shape>> _shapes;
-  std::vector<sf::Text> _text;
+  std::vector<sf::Shape *> _shapes;
+  std::vector<sf::Text *> _text;
 
 public:
   RenderShape() {}
 
-  RenderShape(std::vector<std::shared_ptr<sf::Shape>> shapes,
-              std::vector<sf::Text> text)
+  RenderShape(std::vector<sf::Shape *> shapes, std::vector<sf::Text *> text)
       : _shapes(shapes), _text(text) {}
 
   void addCircleShape(float radius) {
-    _shapes.push_back(std::make_shared<sf::CircleShape>(radius));
+    sf::CircleShape *shape = new sf::CircleShape(radius);
+    _shapes.push_back(shape);
   }
 
   void addRectangleShape(float width, float height) {
-    _shapes.push_back(
-        std::make_shared<sf::RectangleShape>(sf::Vector2f(width, height)));
+    sf::RectangleShape *shape =
+        new sf::RectangleShape(sf::Vector2f(width, height));
+    _shapes.push_back(shape);
   }
 
-  // void readFromFile(std::string &fileName) { std::ifstream fin(fileName); }
+  std::vector<sf::Shape *> getShapes() { return _shapes; }
 
-  // set shape
-  // get shape
+  /*
+   * Read from a file our window, font and shape specifications.
+   *
+   * Rect N X Y SX SY R G B W H
+   * Circ N X Y SX SY R G B Radius
+   *
+   */
+  void readFromFile(std::string &fileName) {
+    std::ifstream fin(fileName);
+    std::string temp;
+    // Window variables.
+    int windowX;
+    int windowY;
+    // Font variables.
+    std::string font;
+    int fontSize;
+    int fontR;
+    int fontG;
+    int fontB;
+    // Shape variables.
+    std::string shapeText;
+    int posX;
+    int posY;
+    float speedX;
+    float speedY;
+    int shapeR;
+    int shapeG;
+    int shapeB;
+    int width; // Radius for cirlces.
+    int height;
+
+    fin >> temp >> windowY >> windowX;
+    fin >> temp >> fontSize >> fontR >> fontG >> fontB;
+
+    while (fin >> temp) {
+      fin >> shapeText >> posX >> posY >> speedX >> speedY >> shapeR >>
+          shapeG >> shapeB >> width;
+      if (temp == "Rectangle") {
+        fin >> height;
+        addRectangleShape(width, height);
+      } else {
+        addCircleShape(width);
+      }
+    }
+  }
   // set text
   // get text
 };
@@ -71,9 +105,9 @@ int main(int argc, char *argv[]) {
   entity.setFillColor(sf::Color(0, 255, 255));
 
   while (window.isOpen()) {
-    // entity.move(1.0f, 1.0f);
 
     sf::Event event;
+
     // Poll event returns true if event is pending.
     while (window.pollEvent(event)) {
 
