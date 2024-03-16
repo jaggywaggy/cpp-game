@@ -19,15 +19,16 @@ class ShapeObjectWrapper {
 private:
   sf::Shape *_shape;
   std::string _text;
-  float _speedX;
-  float _speedY;
+  float _speedX, _speedY;
+  int _type;
 
 public:
   ShapeObjectWrapper() {}
 
   ShapeObjectWrapper(sf::Shape *shape, std::string text, float speedX,
-                     float speedY)
-      : _shape(shape), _text(text), _speedX(speedX), _speedY(speedY) {}
+                     float speedY, int type)
+      : _shape(shape), _text(text), _speedX(speedX), _speedY(speedY),
+        _type(type) {}
 
   ~ShapeObjectWrapper() { delete _shape; }
 
@@ -40,19 +41,16 @@ public:
   void setSpeedY(float speedY) { _speedY = speedY; }
 
   std::string getText() { return _text; }
+
+  int getType() { return _type; }
 };
 
 // Class to construct our shapes.
 class ShapeController {
 private:
   std::vector<ShapeObjectWrapper *> _shapes;
-  int _windowX;
-  int _windowY;
-  std::string *_font;
-  int _fontSize;
-  int _fontR;
-  int _fontG;
-  int _fontB;
+  int _windowX, _windowY, _fontSize, _fontR, _fontG, _fontB;
+  std::string _font;
 
 public:
   ShapeController() {}
@@ -74,7 +72,7 @@ public:
     shape->setFillColor(sf::Color(shapeR, shapeG, shapeB));
     // Wrap our shape.
     ShapeObjectWrapper *shapeObj =
-        new ShapeObjectWrapper(shape, text, speedX, speedY);
+        new ShapeObjectWrapper(shape, text, speedX, speedY, 0);
     _shapes.push_back(shapeObj);
   }
 
@@ -89,7 +87,7 @@ public:
 
     // Wrap our shape.
     ShapeObjectWrapper *shapeObj =
-        new ShapeObjectWrapper(shape, text, speedX, speedY);
+        new ShapeObjectWrapper(shape, text, speedX, speedY, 1);
     _shapes.push_back(shapeObj);
   }
 
@@ -110,12 +108,10 @@ public:
     int shapeR, shapeG, shapeB;
     int width; // Circle radius. Rect height.
     int height;
-    std::string font;
 
     // Read items from file.
     fin >> temp >> _windowY >> _windowX;
-    fin >> temp >> font >> _fontSize >> _fontR >> _fontG >> _fontB;
-    _font = &font;
+    fin >> temp >> _font >> _fontSize >> _fontR >> _fontG >> _fontB;
     while (fin >> shapeType) {
       fin >> shapeText >> posX >> posY >> speedX >> speedY >> shapeR >>
           shapeG >> shapeB >> width >> height;
@@ -140,11 +136,11 @@ public:
 
   int getWindowX() { return _windowX; }
   int getWindowY() { return _windowY; }
-  std::string *getFont() { return _font; }
   int getFontSize() { return _fontSize; }
   int getFontR() { return _fontR; }
   int getFontG() { return _fontG; }
   int getFontB() { return _fontB; }
+  std::string &getFont() { return _font; }
 };
 
 const std::string fileName = "shape-config.txt";
@@ -189,11 +185,54 @@ int main(int argc, char *argv[]) {
 
     // Retrieve our shapes.
     for (auto &shape : shapes) {
+      sf::RectangleShape rectShape;
+      sf::CircleShape circleShape;
       auto &realShape = *shape->getShape();
+      if (shape->getType() == 0) {
+        circleShape.setRadius(
+            static_cast<sf::CircleShape *>(shape->getShape())->getRadius());
+        circleShape.setPosition(
+            static_cast<sf::CircleShape *>(shape->getShape())->getPosition());
+        circleShape.setFillColor(
+            static_cast<sf::CircleShape *>(shape->getShape())->getFillColor());
+      } else {
+        rectShape.setSize(
+            static_cast<sf::RectangleShape *>(shape->getShape())->getSize());
+        rectShape.setPosition(
+            static_cast<sf::RectangleShape *>(shape->getShape())
+                ->getPosition());
+        rectShape.setFillColor(
+            static_cast<sf::RectangleShape *>(shape->getShape())
+                ->getFillColor());
+      }
 
       // Update shape position.
       realShape.setPosition(realShape.getPosition().x + shape->getSpeedX(),
                             realShape.getPosition().y + shape->getSpeedY());
+
+      // Set our font and text.
+      sf::Text text;
+      sf::Font font;
+      font.loadFromFile(shapeController.getFont());
+      text.setFont(font);
+      text.setString(shape->getText());
+      text.setCharacterSize(shapeController.getFontSize());
+      text.setFillColor(sf::Color(shapeController.getFontR(),
+                                  shapeController.getFontG(),
+                                  shapeController.getFontB()));
+      // Update text position.
+      if (shape->getType() == 0) {
+        text.setPosition(circleShape.getPosition().x + circleShape.getRadius() -
+                             (text.getLocalBounds().width * 0.5f),
+                         circleShape.getPosition().y + circleShape.getRadius() -
+                             (text.getLocalBounds().height * 0.5f));
+      } else {
+        text.setPosition(
+            rectShape.getPosition().x + (rectShape.getSize().x * 0.5f) -
+                (text.getLocalBounds().width * 0.5f),
+            rectShape.getPosition().y + (rectShape.getSize().y * 0.5f) -
+                (text.getLocalBounds().height * 0.5f));
+      }
 
       // Check boundries.
       if ((realShape.getPosition().x + realShape.getLocalBounds().width) >
@@ -207,22 +246,9 @@ int main(int argc, char *argv[]) {
         shape->setSpeedY(shape->getSpeedY() * -1.0f);
       }
 
-      // Set our font and text.
-      sf::Text text;
-      sf::Font font;
-
-      auto data = shapeController.getFont();
-      font.loadFromMemory(data, data->size());
-
-      text.setFont(font);
-      text.setString(shape->getText());
-      text.setCharacterSize(shapeController.getFontSize());
-      text.setFillColor(sf::Color(shapeController.getFontR(),
-                                  shapeController.getFontG(),
-                                  shapeController.getFontB()));
-
       // Draw.
       window.draw(realShape);
+      window.draw(text);
     }
 
     // End current frame.
