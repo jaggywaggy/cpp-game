@@ -1,6 +1,15 @@
+#include <fstream>
 #include <iostream>
 #include <vector>
-#include <fstream>
+
+/**
+ * Function returns a reference to a string.
+ * @params    referenceToAString  A reference to a string.
+ * @returns   A referenceToAString.
+ */
+std::string &returnStringReference(std::string &referenceToAString) {
+  return referenceToAString;
+}
 
 /**
  * Student class
@@ -13,38 +22,25 @@ class Student {
   std::string _lastName = "Last Name";
 
 public:
-
   // Default constructor.
-  Student() { }
+  Student() {}
 
-  Student(int age, int avg, const std::string& firstName, const std::string& lastName)
-    : _age(age)
-    , _avg(avg)
-    , _firstName(firstName)
-    , _lastName(lastName)
-    {
-    }
+  Student(int age, int avg, const std::string &firstName,
+          const std::string &lastName)
+      : _age(age), _avg(avg), _firstName(firstName), _lastName(lastName) {}
 
-  int getAge() const {
-    return _age;
-  }
+  int getAge() const { return _age; }
 
-  int getAvg() const {
-    return _avg;
-  }
+  int getAvg() const { return _avg; }
 
-  std::string getFirstName() const {
-    return _firstName;
-  }
+  std::string getFirstName() const { return _firstName; }
 
-  std::string getLastName() const {
-    return _lastName;
-  }
+  std::string getLastName() const { return _lastName; }
 
   void print() const {
-    std::cout << _age  << " " << _avg << " " << _firstName << " " << _lastName << std::endl;
+    std::cout << _age << " " << _avg << " " << _firstName << " " << _lastName
+              << std::endl;
   }
-
 };
 
 /**
@@ -56,22 +52,15 @@ class Course {
   std::vector<Student> _students;
 
 public:
-  Course() { }
+  Course() {}
 
-  Course(const std::string& name) 
-    : _name(name)
-  {
-  }
+  Course(const std::string &name) : _name(name) {}
 
-  void addStudent(const Student& student) {
-    _students.push_back(student);
-  }
+  void addStudent(const Student &student) { _students.push_back(student); }
 
-  const std::vector<Student>& getStudents() const {
-    return _students;
-  }
+  const std::vector<Student> &getStudents() const { return _students; }
 
-  void loadFromFile(const std::string& fileName) {
+  void loadFromFile(const std::string &fileName) {
     std::ifstream fin(fileName);
     std::string firstName, lastName;
     int age;
@@ -86,11 +75,10 @@ public:
   }
 
   void print() {
-    for (const auto& student : _students) {
+    for (const auto &student : _students) {
       student.print();
     }
   }
-
 };
 
 int main() {
