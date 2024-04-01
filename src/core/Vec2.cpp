@@ -1,5 +1,5 @@
 /**
- * Class representing 2D vectors.
+ * Class for representing 2D vectors.
  *
  */
 #include <iostream>
@@ -40,6 +40,11 @@ public:
     return *this;
   }
 
+  /**
+   * Scale a vector, returning
+   * a reference to the object for chaining.
+   *
+   */
   Vec2 &scale(float s) {
     x *= s;
     y *= s;
@@ -49,6 +54,10 @@ public:
   // TODO: rotate
   Vec2 &rotate(float deg) { return *this; }
 
+  /**
+   * Calculate the distnace between two vectors.
+   *
+   */
   float dist(const Vec2 &v) const {
     return sqrtf((v.x - x) * (v.x - x) + (v.y - y) * (v.y - y));
   }
@@ -60,7 +69,7 @@ int main(int argc, char *argv[]) {
   Vec2 v2(50, 75);
 
   Vec2 v3 = v1 + v2;  // Using overloaded + operator.
-  v1.add(v2).add(v3); // Using the add method.
+  v1.add(v2).add(v3); // Using add method chaining.
 
   Vec2 v4(1000, 2000);
   v4 += v1;
