@@ -1,5 +1,6 @@
-#include "raii.cpp"
 #include <iostream>
+
+#include "raii.cpp"
 
 void printRef(int &i) {
   std::cout << &i << " " << i << " " << sizeof(i) << std::endl;

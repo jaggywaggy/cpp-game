@@ -1,13 +1,9 @@
-/**
- * Class for representing 2D vectors.
- *
- */
-#include <iostream>
 #include <math.h>
+#include <iostream>
 #include <ostream>
 
 class Vec2 {
-public:
+ public:
   float x = 0;
   float y = 0;
 
@@ -64,12 +60,11 @@ public:
 };
 
 int main(int argc, char *argv[]) {
-
   Vec2 v1(100, 200);
   Vec2 v2(50, 75);
 
-  Vec2 v3 = v1 + v2;  // Using overloaded + operator.
-  v1.add(v2).add(v3); // Using add method chaining.
+  Vec2 v3 = v1 + v2;   // Using overloaded + operator.
+  v1.add(v2).add(v3);  // Using add method chaining.
 
   Vec2 v4(1000, 2000);
   v4 += v1;
@@ -81,7 +76,7 @@ int main(int argc, char *argv[]) {
   std::cout << v3.x << " " << v3.y << std::endl;
   std::cout << v4.x << " " << v4.y << std::endl;
 
-  float dist = v1.dist(v2); // Using the dist calculation.
+  float dist = v1.dist(v2);  // Using the dist calculation.
 
   std::cout << dist << std::endl;
 }

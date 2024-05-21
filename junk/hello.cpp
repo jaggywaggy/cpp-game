@@ -15,13 +15,12 @@ std::string &returnStringReference(std::string &referenceToAString) {
  * Student class
  */
 class Student {
-
   int _age = 18;
   int _avg = 100;
   std::string _firstName = "First Name";
   std::string _lastName = "Last Name";
 
-public:
+ public:
   // Default constructor.
   Student() {}
 
@@ -47,11 +46,10 @@ public:
  * Course class
  */
 class Course {
-
   std::string _name = "Course";
   std::vector<Student> _students;
 
-public:
+ public:
   Course() {}
 
   Course(const std::string &name) : _name(name) {}

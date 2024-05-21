@@ -16,18 +16,21 @@
 
 // Class to wrap an sf shape with additional information.
 class ShapeObjectWrapper {
-private:
+ private:
   sf::Shape *_shape;
   std::string _text;
   float _speedX, _speedY;
   int _type;
 
-public:
+ public:
   ShapeObjectWrapper() {}
 
   ShapeObjectWrapper(sf::Shape *shape, std::string text, float speedX,
                      float speedY, int type)
-      : _shape(shape), _text(text), _speedX(speedX), _speedY(speedY),
+      : _shape(shape),
+        _text(text),
+        _speedX(speedX),
+        _speedY(speedY),
         _type(type) {}
 
   ~ShapeObjectWrapper() { delete _shape; }
@@ -47,12 +50,12 @@ public:
 
 // Class to construct our shapes.
 class ShapeController {
-private:
+ private:
   std::vector<ShapeObjectWrapper *> _shapes;
   int _windowX, _windowY, _fontSize, _fontR, _fontG, _fontB;
   std::string _font;
 
-public:
+ public:
   ShapeController() {}
 
   ShapeController(std::vector<ShapeObjectWrapper *> shapes) : _shapes(shapes) {}
@@ -106,7 +109,7 @@ public:
     int posX, posY;
     float speedX, speedY;
     int shapeR, shapeG, shapeB;
-    int width; // Circle radius. Rect height.
+    int width;  // Circle radius. Rect height.
     int height;
 
     // Read items from file.
@@ -162,22 +165,20 @@ int main(int argc, char *argv[]) {
   // window.setFramerateLimit(60);
 
   while (window.isOpen()) {
-
     sf::Event event;
 
     // Poll event returns true if event is pending.
     while (window.pollEvent(event)) {
-
       // Handle our event.
       switch (event.type) {
-      case sf::Event::Closed:
-        window.close();
-        break;
-      case sf::Event::KeyPressed:
-        std::cout << "Key Pressed" << std::endl;
-        break;
-      default:
-        break;
+        case sf::Event::Closed:
+          window.close();
+          break;
+        case sf::Event::KeyPressed:
+          std::cout << "Key Pressed" << std::endl;
+          break;
+        default:
+          break;
       }
     }
     // Clear screen after each frame.
